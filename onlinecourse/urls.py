@@ -1,27 +1,27 @@
-from django.urls import path
-from django.conf import settings
-from django.conf.urls.static import static
-from . import views
+"""
+Django URL configuration for the onlinecourse application.
 
-app_name = 'onlinecourse'
-urlpatterns = [
-    # route is a string contains a URL pattern
-    # view refers to the view function
-    # name the URL
-    path(route='', view=views.CourseListView.as_view(), name='index'),
-    path('registration/', views.registration_request, name='registration'),
-    path('login/', views.login_request, name='login'),
-    path('logout/', views.logout_request, name='logout'),
-    # ex: /onlinecourse/5/
-    path('<int:pk>/', views.CourseDetailView.as_view(), name='course_details'),
-    # ex: /enroll/5/
-    path('<int:course_id>/enroll/', views.enroll, name='enroll'),
+This file is intentionally minimal - it simply imports the combined urlpatterns
+from our modular urls package. This maintains compatibility with Django's
+URL resolution system while allowing us to maintain a clean, modular structure.
 
-    # <HINT> Create a route for submit view
-    path('<int:course_id>/submit/', views.submit, name='submit'),
+Why keep this file?
+1. Django expects a urls.py at the app root
+2. Maintains backward compatibility
+3. Simple - One line import
+4. Clear - Shows that URLs are modularized
 
-    # <HINT> Create a route for show_exam_result view
-    path('course/<int:course_id>/submission/<int:submission_id>/result/', 
-         views.show_exam_result, name='show_exam_result'),
+The actual URL patterns are defined in:
+- urls/auth.py     - Authentication endpoints
+- urls/course.py   - Course browsing endpoints
+- urls/enrollment.py - Enrollment endpoints
+- urls/exam.py     - Exam submission endpoints
+- urls/results.py  - Exam results endpoints
+"""
+from .urls import urlpatterns
 
- ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# ============================================================================
+# EXPORT URLPATTERNS
+# ============================================================================
+# Django's URL resolver imports urlpatterns from this module
+__all__ = ['urlpatterns']
