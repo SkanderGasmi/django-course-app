@@ -1,5 +1,5 @@
 """
-User profile models for Instructors and Learners.
+User profile models for Instructors and Learners
 
 These models extend Django's built-in User model to add role-specific fields
 and functionality. We use OneToOneField instead of Multi-table inheritance

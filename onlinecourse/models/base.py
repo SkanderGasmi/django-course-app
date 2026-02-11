@@ -1,5 +1,5 @@
 """
-Base models and mixins for the entire application.
+Base models and mixins for the entire application
 
 This module provides abstract base classes that are inherited by all models
 throughout the application. Centralizing common functionality here ensures:

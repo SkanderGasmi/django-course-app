@@ -1,5 +1,5 @@
 """
-Django models module.
+Django models module
 
 This file is intentionally minimal - it just imports the model classes
 from our well-organized package structure and exposes them at the package level.
@@ -21,6 +21,7 @@ depend on them, etc.) to ensure all references are resolvable.
 # BASE MODELS (Abstract classes, no database tables)
 # ============================================================================
 from .models.base import TimeStampedModel, AbstractUserProfile
+
 
 # ============================================================================
 # USER PROFILE MODELS (Extend Django User)

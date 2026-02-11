@@ -1,5 +1,5 @@
 """
-Enrollment model linking users to courses with additional metadata.
+Enrollment model linking users to courses with additional metadata
 
 The Enrollment model serves as a through model for the ManyToMany relationship
 between User and Course. This allows us to track enrollment-specific data:

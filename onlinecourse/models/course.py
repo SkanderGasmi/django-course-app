@@ -1,5 +1,5 @@
 """
-Course model representing educational courses in the platform.
+Course model representing educational courses in the platform
 
 The Course model is the central entity around which the entire application
 revolves. It contains Lessons (content), Questions (assessments), and

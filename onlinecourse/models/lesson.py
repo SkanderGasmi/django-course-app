@@ -1,5 +1,5 @@
 """
-Lesson model representing individual content units within a course.
+Lesson model representing individual content units within a course
 
 A Lesson is a self-contained educational unit that could be a video lecture,
 reading assignment, quiz, or interactive exercise. Lessons are ordered within

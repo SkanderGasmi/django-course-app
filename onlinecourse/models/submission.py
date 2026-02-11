@@ -1,5 +1,5 @@
 """
-Submission model representing student exam attempts.
+Submission model representing student exam attempts
 
 A Submission records all choices a student makes when taking an exam.
 Each submission is linked to an enrollment and has a many-to-many

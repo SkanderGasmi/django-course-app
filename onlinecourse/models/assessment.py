@@ -1,5 +1,5 @@
 """
-Assessment models for course exams and quizzes.
+Assessment models for course exams and quizzes
 
 This module contains the Question and Choice models that together form
 a flexible assessment system. Each question belongs to a course and
