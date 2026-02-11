@@ -1,135 +1,77 @@
-import sys
-from django.utils.timezone import now
-try:
-    from django.db import models
-except Exception:
-    print("There was an error loading django modules. Do you have django installed?")
-    sys.exit()
+"""
+Django models module.
 
-from django.conf import settings
-import uuid
+This file is intentionally minimal - it just imports the model classes
+from our well-organized package structure and exposes them at the package level.
 
+Why this approach?
+1. Separation of concerns: Each model class has its own file
+2. Maintainability: Easy to locate and edit specific models
+3. Testability: Can test models in isolation
+4. Collaboration: Multiple developers can work on different model files
+5. Performance: Only load what's needed
+6. Migration compatibility: Django's makemigrations works through this file
 
-# Instructor model
-class Instructor(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    full_time = models.BooleanField(default=True)
-    total_learners = models.IntegerField()
+Import order:
+Models are imported in dependency order (base models first, then models that
+depend on them, etc.) to ensure all references are resolvable.
+"""
 
-    def __str__(self):
-        return self.user.username
+# ============================================================================
+# BASE MODELS (Abstract classes, no database tables)
+# ============================================================================
+from .models.base import TimeStampedModel, AbstractUserProfile
 
+# ============================================================================
+# USER PROFILE MODELS (Extend Django User)
+# ============================================================================
+from .models.user_profiles import Instructor, Learner
 
-# Learner model
-class Learner(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    STUDENT = 'student'
-    DEVELOPER = 'developer'
-    DATA_SCIENTIST = 'data_scientist'
-    DATABASE_ADMIN = 'dba'
-    OCCUPATION_CHOICES = [
-        (STUDENT, 'Student'),
-        (DEVELOPER, 'Developer'),
-        (DATA_SCIENTIST, 'Data Scientist'),
-        (DATABASE_ADMIN, 'Database Admin')
-    ]
-    occupation = models.CharField(
-        null=False,
-        max_length=20,
-        choices=OCCUPATION_CHOICES,
-        default=STUDENT
-    )
-    social_link = models.URLField(max_length=200)
+# ============================================================================
+# CORE COURSE MODELS (Course structure hierarchy)
+# ============================================================================
+from .models.course import Course
+from .models.lesson import Lesson
 
-    def __str__(self):
-        return self.user.username + "," + \
-               self.occupation
+# ============================================================================
+# ENROLLMENT MODEL (Links users to courses)
+# ============================================================================
+from .models.enrollment import Enrollment
 
+# ============================================================================
+# ASSESSMENT MODELS (Questions and choices)
+# ============================================================================
+from .models.assessment import Question, Choice
 
-# Course model
-class Course(models.Model):
-    name = models.CharField(null=False, max_length=30, default='online course')
-    image = models.ImageField(upload_to='course_images/')
-    description = models.CharField(max_length=1000)
-    pub_date = models.DateField(null=True)
-    instructors = models.ManyToManyField(Instructor)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Enrollment')
-    total_enrollment = models.IntegerField(default=0)
-    is_enrolled = False
+# ============================================================================
+# SUBMISSION MODEL (Exam attempts)
+# ============================================================================
+from .models.submission import Submission
 
-    def __str__(self):
-        return "Name: " + self.name + "," + \
-               "Description: " + self.description
-
-
-# Lesson model
-class Lesson(models.Model):
-    title = models.CharField(max_length=200, default="title")
-    order = models.IntegerField(default=0)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    content = models.TextField()
-
-
-# Enrollment model
-# <HINT> Once a user enrolled a class, an enrollment entry should be created between the user and course
-# And we could use the enrollment to track information such as exam submissions
-class Enrollment(models.Model):
-    AUDIT = 'audit'
-    HONOR = 'honor'
-    BETA = 'BETA'
-    COURSE_MODES = [
-        (AUDIT, 'Audit'),
-        (HONOR, 'Honor'),
-        (BETA, 'BETA')
-    ]
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    date_enrolled = models.DateField(default=now)
-    mode = models.CharField(max_length=5, choices=COURSE_MODES, default=AUDIT)
-    rating = models.FloatField(default=5.0)
-
-
-
-
-# Add these two new models BEFORE the Submission model
-class Question(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='questions')
-    text = models.CharField(max_length=500)
-    grade = models.IntegerField(default=1)
+# ============================================================================
+# EXPORT ALL MODELS
+# ============================================================================
+# This makes them available when importing from 'onlinecourse.models'
+__all__ = [
+    # Base
+    'TimeStampedModel',
+    'AbstractUserProfile',
     
-    def __str__(self):
-        return f"{self.course.name}: {self.text[:50]}"
+    # User Profiles
+    'Instructor',
+    'Learner',
     
-    # method to calculate if the learner gets the score of the question
-   
-
-    def is_get_score(self, selected_ids):
-        all_answers = self.choices.filter(is_correct=True).count()  # ✅ Use 'choices' not 'choice_set'
-        selected_correct = self.choices.filter(is_correct=True, id__in=selected_ids).count()
-        if all_answers == selected_correct:
-            return True
-        else:
-            return False
-
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
-    text = models.CharField(max_length=200)
-    is_correct = models.BooleanField(default=False)
+    # Course Structure
+    'Course',
+    'Lesson',
     
-    def __str__(self):
-        return self.text
-
-
-class Submission(models.Model):
-    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-    choices = models.ManyToManyField(Choice)
+    # Enrollment
+    'Enrollment',
     
-    def __str__(self):
-        return f"{self.enrollment.user.username} - {self.enrollment.course.name}"
-
+    # Assessment
+    'Question',
+    'Choice',
+    
+    # Submission
+    'Submission',
+]
