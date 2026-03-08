@@ -7,10 +7,6 @@
 ![Tests](https://img.shields.io/badge/Tests-Comprehensive-brightgreen.svg)
 ![Architecture](https://img.shields.io/badge/Architecture-DDD%20%7C%20SOLID%20%7C%20TDD-blueviolet.svg)
 
-A comprehensive Django-based learning management system with advanced assessment capabilities, built with enterprise-grade architecture and best practices.
-
----
-
 ## 📋 Overview
 
 This platform provides a complete solution for online education, enabling instructors to create courses, lessons, and assessments while allowing learners to enroll, complete exams, and track their progress. The system features a robust assessment engine with automatic grading and detailed performance analytics.
